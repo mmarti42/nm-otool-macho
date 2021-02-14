@@ -1,6 +1,6 @@
 #include "nm.h"
 
-void *ft_mmap(char *filename, size_t *fsize)
+void *ft_mmap(char *filename)
 {
 	int fd;
 	char *mapped;
@@ -15,7 +15,7 @@ void *ft_mmap(char *filename, size_t *fsize)
 	}
 	if (fstat(fd, &st) < 0)
 		fatal_err(strerror(errno));
-	if (st.st_size < (off_t)sizeof(struct mach_header_64))
+	if ((cfsize = st.st_size) <= (off_t)sizeof(struct mach_header_64))
 	{
 		ft_putstr_fd("not binary\n", STDERR_FILENO);
 		return NULL;
@@ -23,7 +23,6 @@ void *ft_mmap(char *filename, size_t *fsize)
 	if ((mapped = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0)) == MAP_FAILED)
 		fatal_err(strerror(errno));
 	close(fd);
-	*fsize = st.st_size;
 	return (mapped);
 }
 
@@ -34,6 +33,8 @@ t_symbol *get_sym_list(t_symtab_command *sc, char *mapped)
 
 	strtab = mapped + sc->stroff;
 	syms = (mapped + sc->symoff);
+	if ((off_t)(strtab - mapped) > cfsize  || (char *)syms + sc->nsyms - mapped > (long long)cfsize)
+		fatal_err("corrupted");
 //	if (g_file_type == archx86)  //todo
 	return (fill_sym_list64(syms, strtab, sc->nsyms, mapped));
 }
@@ -55,11 +56,10 @@ void print_sym_list(t_symbol *symlist)
 void print_symtab(char *filename)
 {
 	t_mach_header		*mapped;
-	size_t				fsize;
 	t_symbol 			*sym_list;
 	t_symtab_command 	*sc;
 
-	if (!(mapped = (t_mach_header *)ft_mmap(filename, &fsize)))
+	if (!(mapped = (t_mach_header *)ft_mmap(filename)))
 		return ;
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
 		ft_putstr_fd("The file was not recognized as a valid object file", STDERR_FILENO);
@@ -74,7 +74,7 @@ void print_symtab(char *filename)
 			//todo free_sym_list(sym_list);
 		}
 	}
-	if (munmap(mapped, fsize) < 0)
+	if (munmap(mapped, cfsize) < 0)
 		return (fatal_err(strerror(errno)));
 }
 

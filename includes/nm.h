@@ -42,6 +42,7 @@ typedef struct symtab_command t_symtab_command;
 typedef struct nlist t_nlist;
 typedef struct nlist_64 t_nlist_64;
 
+off_t			cfsize;
 t_opt			g_opt;
 t_file_type		g_file_type;
 
