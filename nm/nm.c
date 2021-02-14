@@ -15,6 +15,11 @@ void *ft_mmap(char *filename, size_t *fsize)
 	}
 	if (fstat(fd, &st) < 0)
 		fatal_err(strerror(errno));
+	if (st.st_size < (off_t)sizeof(struct mach_header_64))
+	{
+		ft_putstr_fd("not binary\n", STDERR_FILENO);
+		return NULL;
+	}
 	if ((mapped = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0)) == MAP_FAILED)
 		fatal_err(strerror(errno));
 	close(fd);
@@ -30,7 +35,6 @@ t_symbol *get_sym_list(t_symtab_command *sc, char *mapped)
 	strtab = mapped + sc->stroff;
 	syms = (mapped + sc->symoff);
 //	if (g_file_type == archx86)  //todo
-//		return (fill_sym_list32(syms, strtab, sc->nsyms, mapped));
 	return (fill_sym_list64(syms, strtab, sc->nsyms, mapped));
 }
 

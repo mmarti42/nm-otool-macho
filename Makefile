@@ -8,7 +8,11 @@ FLAGS := -g -Wall -Wextra -Werror
 
 # ------------  SOURCE FILES  ------------------------------------------------ #
 
-SOURCES := nm.c
+SOURCES := nm.c\
+	fill_sym_list.c\
+	get_lc.c\
+	insert_sym.c\
+	utils.c
 
 # ------------  DIRECTORIES  ------------------------------------------------- #
 
