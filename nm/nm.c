@@ -45,6 +45,11 @@ void print_reverse(t_symbol *symlist)
 		symlist = symlist->next;
 	while (symlist)
 	{
+		if (g_opt.u && symlist->type != 'U')
+		{
+			symlist = symlist->prev;
+			continue ;
+		}
 		if (symlist->addr && *(symlist->name))
 			ft_printf("%016llx %c ", symlist->addr, symlist->type);
 		else if (*(symlist->name))
@@ -61,6 +66,11 @@ void print_sym_list(t_symbol *symlist)
 		return (print_reverse(symlist));
 	while (symlist)
 	{
+		if (g_opt.u && symlist->type != 'U')
+		{
+			symlist = symlist->next;
+			continue ;
+		}
 		if (symlist->addr && *(symlist->name))
 			ft_printf("%016llx %c ", symlist->addr, symlist->type);
 		else if (*(symlist->name))
