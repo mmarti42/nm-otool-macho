@@ -32,8 +32,8 @@ char **ft_nm_getopt(const char **av)
 			g_opt.p = true;
 		else if (*buf == 'u')
 			g_opt.u = true;
-		else if (*buf == 'A')
-			g_opt.a = true;
+		else if (*buf == 'g')
+			g_opt.g = true;
 		else if (*buf == 'r')
 			g_opt.r = true;
 	}

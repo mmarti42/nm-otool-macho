@@ -45,7 +45,7 @@ void print_reverse(t_symbol *symlist)
 		symlist = symlist->next;
 	while (symlist)
 	{
-		if (g_opt.u && symlist->type != 'U')
+		if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type < 'A'))
 		{
 			symlist = symlist->prev;
 			continue ;
