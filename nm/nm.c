@@ -39,47 +39,37 @@ t_symbol *get_sym_list(t_symtab_command *sc, char *mapped)
 	return (fill_sym_list64(syms, strtab, sc->nsyms, mapped));
 }
 
-void print_reverse(t_symbol *symlist)
+void print_one_symbol(t_symbol *symlist, char *fname)
 {
-	while (symlist->next)
-		symlist = symlist->next;
-	while (symlist)
-	{
-		if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type < 'A'))
-		{
-			symlist = symlist->prev;
-			continue ;
-		}
-		if (symlist->addr && *(symlist->name))
-			ft_printf("%016llx %c ", symlist->addr, symlist->type);
-		else if (*(symlist->name))
-			ft_printf("%16s %c ", " ", symlist->type);
-		if (*(symlist->name))
-			ft_putendl(symlist->name);
-		symlist = symlist->prev;
-	}
+	if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type < 'A'))
+		return;
+	if (g_opt.aa)
+		ft_printf("%s: ", fname);
+	if (symlist->addr && *(symlist->name))
+		ft_printf("%016llx %c ", symlist->addr, symlist->type);
+	else if (*(symlist->name))
+		ft_printf("%16s %c ", " ", symlist->type);
+	if (*(symlist->name))
+		ft_putendl(symlist->name);
 }
 
 void print_sym_list(t_symbol *symlist, char *fname)
 {
 	if (g_opt.r)
-		return (print_reverse(symlist));
-	while (symlist)
 	{
-		if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type < 'A'))
-		{
+		while (symlist->next)
 			symlist = symlist->next;
-			continue ;
+		while (symlist)
+		{
+			print_one_symbol(symlist, fname);
+			symlist = symlist->prev;
 		}
-		if (g_opt.aa)
-			ft_printf("%s: ", fname);
-		if (symlist->addr && *(symlist->name))
-			ft_printf("%016llx %c ", symlist->addr, symlist->type);
-		else if (*(symlist->name))
-			ft_printf("%16s %c ", " ", symlist->type);
-		if (*(symlist->name))
-			ft_putendl(symlist->name);
-		symlist = symlist->next;
+	}
+	else {
+		while (symlist) {
+			print_one_symbol(symlist, fname);
+			symlist = symlist->next;
+		}
 	}
 }
 

@@ -19,12 +19,12 @@ void *xmalloc(size_t size)
 
 char **ft_nm_getopt(const char **av)
 {
-	char 	buf[5];
+	char 	buf[6];
 	int		i;
 	char	**ret;
 
 	i = -1;
-	if (!(ret = parse_opt(av, "pruA", buf)))
+	if (!(ret = parse_opt(av, "pruAg", buf)))
 		fatal_err(USAGE);
 	while (buf[++i])
 	{
