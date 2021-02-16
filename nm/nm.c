@@ -60,7 +60,7 @@ void print_reverse(t_symbol *symlist)
 	}
 }
 
-void print_sym_list(t_symbol *symlist)
+void print_sym_list(t_symbol *symlist, char *fname)
 {
 	if (g_opt.r)
 		return (print_reverse(symlist));
@@ -71,6 +71,8 @@ void print_sym_list(t_symbol *symlist)
 			symlist = symlist->next;
 			continue ;
 		}
+		if (g_opt.aa)
+			ft_printf("%s: ", fname);
 		if (symlist->addr && *(symlist->name))
 			ft_printf("%016llx %c ", symlist->addr, symlist->type);
 		else if (*(symlist->name))
@@ -100,7 +102,7 @@ void print_symtab(char *filename)
 			sym_list = get_sym_list(sc, (char *)mapped);
 			if (g_opt.print_files == true)
 				ft_printf("%s:\n", filename);
-			print_sym_list(sym_list);
+			print_sym_list(sym_list, filename);
 			//todo free_sym_list(sym_list);
 		}
 	}
