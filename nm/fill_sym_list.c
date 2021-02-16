@@ -30,18 +30,15 @@ static char get_sym_sect64(char *mapped, uint8_t n_sect)
 		n_sect -= segment->nsects;
 		segment = (struct segment_command_64 *)next_com((t_load_command *)segment);
 	}
-	if (!ft_strcmp(segment->segname, "__TEXT"))
-		return 'T';
 	section = (struct section_64 *)(((char *)segment) + sizeof(struct segment_command_64));
 	while (--n_sect)
 		section++;
-	if (!ft_strcmp(section->segname, "__DATA"))
-	{
-		if (!ft_strcmp(section->sectname, "__data"))
-			return 'D';
-		if (!ft_strcmp(section->sectname, "__bss"))
-			return 'B';
-	}
+	if (!ft_strcmp(section->sectname, "__data"))
+	    return 'D';
+	if (!ft_strcmp(section->sectname, "__bss"))
+	    return 'B';
+	if (!ft_strcmp(section->sectname, "__text"))
+	    return 'T';
 	return 'S';
 }
 

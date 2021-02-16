@@ -15,7 +15,7 @@ void *ft_mmap(char *filename)
 	}
 	if (fstat(fd, &st) < 0)
 		fatal_err(strerror(errno));
-	if ((cfsize = st.st_size) <= (off_t)sizeof(struct mach_header_64))
+	if ((cfsize = st.st_size) <= (off_t)0x1000)
 	{
 		ft_putstr_fd("not binary\n", STDERR_FILENO);
 		return NULL;
@@ -70,6 +70,8 @@ void print_symtab(char *filename)
 		else
 		{
 			sym_list = get_sym_list(sc, (char *)mapped);
+			if (g_opt.print_files == true)
+				ft_printf("%s:\n", filename);
 			print_sym_list(sym_list);
 			//todo free_sym_list(sym_list);
 		}
@@ -88,8 +90,11 @@ int main(int ac, char **av)
 		 print_symtab("a.out");
 	else
 	{
-		while (*args)
+		while (*args) {
+			if (args[1])
+				ft_putchar('\n');
 			print_symtab(*args++);
+		}
 	}
 	return (0);
 }

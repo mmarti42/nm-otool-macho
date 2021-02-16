@@ -24,6 +24,8 @@ char **ft_nm_getopt(const char **av)
 	char	**ret;
 
 	i = -1;
+	if (av[1] && av[2])
+		g_opt.print_files = true;
 	if (!(ret = parse_opt(av, "pruA", buf)))
 		fatal_err(USAGE);
 	while (buf[++i])

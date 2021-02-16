@@ -18,6 +18,7 @@ typedef struct	s_opt {
 	t_bool r;
 	t_bool u;
 	t_bool a;
+	t_bool print_files;
 }				t_opt;
 
 typedef struct	s_symbol
