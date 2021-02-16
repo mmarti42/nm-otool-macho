@@ -66,7 +66,7 @@ void print_sym_list(t_symbol *symlist)
 		return (print_reverse(symlist));
 	while (symlist)
 	{
-		if (g_opt.u && symlist->type != 'U')
+		if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type < 'A'))
 		{
 			symlist = symlist->next;
 			continue ;
