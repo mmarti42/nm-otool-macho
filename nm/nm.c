@@ -83,7 +83,7 @@ void print_symtab(char *filename)
 	if (!(mapped = (t_mach_header *)ft_mmap(filename)))
 		return ;
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
-		ft_putstr_fd("The file was not recognized as a valid object file", STDERR_FILENO);
+		ft_putstr_fd("The file was not recognized as a valid object file\n", STDERR_FILENO);
 	else {
 		g_file_type = mapped->magic;
 		if (!(sc = get_lc(LC_SYMTAB, mapped)))
