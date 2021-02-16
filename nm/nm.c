@@ -15,7 +15,7 @@ void *ft_mmap(char *filename)
 	}
 	if (fstat(fd, &st) < 0)
 		fatal_err(strerror(errno));
-	if ((cfsize = st.st_size) <= (off_t)0x1000)
+	if ((g_cfsize = st.st_size) <= (off_t)0x1000)
 	{
 		ft_putstr_fd("not binary\n", STDERR_FILENO);
 		return NULL;
@@ -33,14 +33,32 @@ t_symbol *get_sym_list(t_symtab_command *sc, char *mapped)
 
 	strtab = mapped + sc->stroff;
 	syms = (mapped + sc->symoff);
-	if ((off_t)(strtab - mapped) > cfsize  || (char *)syms + sc->nsyms - mapped > (long long)cfsize)
+	if ((off_t)(strtab - mapped) > g_cfsize  || (char *)syms + sc->nsyms - mapped > (long long)g_cfsize)
 		fatal_err("corrupted");
 //	if (g_file_type == archx86)  //todo
 	return (fill_sym_list64(syms, strtab, sc->nsyms, mapped));
 }
 
+void print_reverse(t_symbol *symlist)
+{
+	while (symlist->next)
+		symlist = symlist->next;
+	while (symlist)
+	{
+		if (symlist->addr && *(symlist->name))
+			ft_printf("%016llx %c ", symlist->addr, symlist->type);
+		else if (*(symlist->name))
+			ft_printf("%16s %c ", " ", symlist->type);
+		if (*(symlist->name))
+			ft_putendl(symlist->name);
+		symlist = symlist->prev;
+	}
+}
+
 void print_sym_list(t_symbol *symlist)
 {
+	if (g_opt.r)
+		return (print_reverse(symlist));
 	while (symlist)
 	{
 		if (symlist->addr && *(symlist->name))
@@ -76,7 +94,7 @@ void print_symtab(char *filename)
 			//todo free_sym_list(sym_list);
 		}
 	}
-	if (munmap(mapped, cfsize) < 0)
+	if (munmap(mapped, g_cfsize) < 0)
 		return (fatal_err(strerror(errno)));
 }
 

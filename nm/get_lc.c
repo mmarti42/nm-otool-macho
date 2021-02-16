@@ -17,7 +17,7 @@ void *get_lc(uint32_t cmd, t_mach_header *mapped)
 		ld = (t_load_command *)((char *)mapped + sizeof(struct mach_header_64));
 	while (++i <= mapped->ncmds)
 	{
-		if ((char *)ld - (char *)mapped + ld->cmdsize >= cfsize)
+		if ((char *)ld - (char *)mapped + ld->cmdsize >= g_cfsize)
 			fatal_err("corrupted");
 		if (ld->cmd == cmd)
 			return ld;

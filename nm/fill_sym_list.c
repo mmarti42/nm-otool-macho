@@ -53,7 +53,7 @@ t_symbol *fill_sym_list64(t_nlist_64 *syms, char *strtab, size_t i, char *mapped
 		if (!(syms->n_type & N_STAB))
 		{
 			new = (t_symbol *) xmalloc(sizeof(t_symbol));
-			if ((new->name = strtab + syms->n_un.n_strx) - mapped > cfsize)
+			if ((new->name = strtab + syms->n_un.n_strx) - mapped > g_cfsize)
 				fatal_err("corrupted");
 			new->addr = syms->n_value;
 			if (syms->n_sect == NO_SECT)
