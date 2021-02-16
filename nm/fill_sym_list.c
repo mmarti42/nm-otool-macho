@@ -55,7 +55,7 @@ static char get_sym_sect32(char *mapped, uint8_t n_sect)
 		n_sect -= segment->nsects;
 		segment = (struct segment_command *)next_com((t_load_command *)segment);
 	}
-	section = (struct section *)(((char *)segment) + sizeof(struct segment_command_64));
+	section = (struct section *)(((char *)segment) + sizeof(struct segment_command));
 	while (--n_sect)
 		section++;
 	if (!ft_strcmp(section->sectname, "__data"))
