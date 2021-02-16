@@ -35,7 +35,8 @@ t_symbol *get_sym_list(t_symtab_command *sc, char *mapped)
 	syms = (mapped + sc->symoff);
 	if ((off_t)(strtab - mapped) > g_cfsize  || (char *)syms + sc->nsyms - mapped > (long long)g_cfsize)
 		fatal_err("corrupted");
-//	if (g_file_type == archx86)  //todo
+	if (g_file_type == archx86)
+		return (fill_sym_list32(syms, strtab, sc->nsyms, mapped));
 	return (fill_sym_list64(syms, strtab, sc->nsyms, mapped));
 }
 

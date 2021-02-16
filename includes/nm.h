@@ -48,13 +48,14 @@ off_t			g_cfsize;
 t_opt			g_opt;
 t_file_type		g_file_type;
 
-void		fatal_err(const char *mes);
-void		*xmalloc(size_t size);
-t_symbol	*fill_sym_list64(t_nlist_64 *syms, char *strtab, size_t i, char *mapped);
-void		*get_lc(uint32_t cmd, t_mach_header *mapped);
-t_symbol	*insert_sym(t_symbol *new, t_symbol *first);
-char		**ft_nm_getopt(const char **av);
-t_load_command*	next_com(t_load_command *ld);
+void			fatal_err(const char *mes);
+void			*xmalloc(size_t size);
+t_symbol		*fill_sym_list64(t_nlist_64 *syms, char *strtab, size_t i, char *mapped);
+void			*get_lc(uint32_t cmd, t_mach_header *mapped);
+t_symbol		*insert_sym(t_symbol *new, t_symbol *first);
+char			**ft_nm_getopt(const char **av);
+t_load_command	*next_com(t_load_command *ld);
+t_symbol		*fill_sym_list32(t_nlist *syms, char *strtab, size_t i, char *mapped);
 
 
 #endif
