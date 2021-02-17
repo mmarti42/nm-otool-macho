@@ -47,9 +47,19 @@ void print_one_symbol(t_symbol *symlist, char *fname)
 	if (g_opt.aa)
 		ft_printf("%s: ", fname);
 	if (symlist->addr && *(symlist->name))
-		ft_printf("%016llx %c ", symlist->addr, symlist->type);
+	{
+		if (g_file_type == archx64)
+			ft_printf("%016llx %c ", symlist->addr, symlist->type);
+		else
+			ft_printf("%08llx %c ", symlist->addr, symlist->type);
+	}
 	else if (*(symlist->name))
-		ft_printf("%16s %c ", " ", symlist->type);
+	{
+		if (g_file_type == archx64)
+			ft_printf("%16s %c ", " ", symlist->type);
+		else
+			ft_printf("%8s %c ", " ", symlist->type);
+	}
 	if (*(symlist->name))
 		ft_putendl(symlist->name);
 }
