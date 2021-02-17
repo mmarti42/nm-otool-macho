@@ -86,8 +86,11 @@ void print_sym_list(t_symbol *symlist, char *fname)
 
 uint32_t	b_swap32(uint32_t x)
 {
+#ifdef __LITTLE_ENDIAN__
 	return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8)
 			| (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
+#endif
+	return (x);
 }
 
 t_mach_header *handle_fat(void *mapped)
