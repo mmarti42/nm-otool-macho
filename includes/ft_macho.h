@@ -9,7 +9,7 @@
 #include <mach-o/fat.h>
 # include <ar.h>
 
-# include "libft.h"
+# include "ft_printf.h"
 
 # ifdef __i386__
 #define G_CPU = CPU_TYPE_X86

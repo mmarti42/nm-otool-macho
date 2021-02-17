@@ -115,6 +115,18 @@ t_mach_header *handle_fat(void *mapped)
 	return ret;
 }
 
+void free_sym_list(t_symbol *symlist)
+{
+	t_symbol *tmp;
+
+	while (symlist)
+	{
+		tmp = symlist;
+		symlist = symlist->next;
+		free(tmp);
+	}
+}
+
 void print_symtab(char *filename)
 {
 	t_mach_header		*mapped;
@@ -123,9 +135,6 @@ void print_symtab(char *filename)
 
 	if (!(mapped = (t_mach_header *)ft_mmap(filename)))
 		return ;
-//	if (!ft_strncmp(ARMAG, (char *)mapped, SARMAG))
-//		return;
-//	ft_printf("%x\n", *(uint32_t *)mapped);
 	if (*(uint32_t *)mapped == FAT_CIGAM)
 		mapped = handle_fat(mapped);
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
@@ -140,7 +149,7 @@ void print_symtab(char *filename)
 			if (g_opt.print_files == true)
 				ft_printf("%s:\n", filename);
 			print_sym_list(sym_list, filename);
-			//todo free_sym_list(sym_list);
+			free_sym_list(sym_list);
 		}
 	}
 	if (munmap(mapped, g_cfsize) < 0)

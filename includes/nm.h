@@ -1,7 +1,6 @@
 #ifndef NM_H
 # define NM_H
 
-# include "ft_printf.h"
 # include "ft_macho.h"
 # include <mach-o/nlist.h>
 
