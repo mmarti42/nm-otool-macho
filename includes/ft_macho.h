@@ -6,12 +6,23 @@
 # include <errno.h>
 # include <sys/mman.h>
 # include <sys/stat.h>
+#include <mach-o/fat.h>
+# include <ar.h>
 
 # include "libft.h"
 
+# ifdef __i386__
+#define G_CPU = CPU_TYPE_X86
+# elif __x86_64__
+#define G_CPU CPU_TYPE_X86_64
+# else
+#define G_CPU -1
+#endif
+
+
 typedef enum	e_file_type
 {
-	none = 0,
+	fat = FAT_MAGIC,
 	archx64 = MH_MAGIC_64,
 	archx86 = MH_MAGIC
 }				t_file_type;

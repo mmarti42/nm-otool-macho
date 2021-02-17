@@ -84,6 +84,37 @@ void print_sym_list(t_symbol *symlist, char *fname)
 	}
 }
 
+uint32_t	b_swap32(uint32_t x)
+{
+	return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8)
+			| (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
+}
+
+t_mach_header *handle_fat(void *mapped)
+{
+	uint64_t num;
+	struct fat_arch *it;
+	t_mach_header *ret;
+
+	ret = NULL;
+	if ((num = b_swap32(((struct fat_header *)mapped)->nfat_arch)) * sizeof(struct fat_header) + 1 > (uint64_t)g_cfsize)
+		fatal_err("corrupted");
+	it = (struct fat_arch *)((char *)mapped + sizeof(struct fat_header));
+	if (G_CPU == -1)
+		return (t_mach_header *)((char *)mapped + it->offset);
+	while (num--)
+	{
+		if (b_swap32(it->cputype) == G_CPU)
+			ret =  (t_mach_header *)((char *)mapped + b_swap32(it->offset));
+		it++;
+	}
+	if (!ret)
+		return (t_mach_header *)((char *)mapped +
+		b_swap32((((struct fat_arch *)((char *)mapped + sizeof(struct fat_header)))->offset)));
+	g_cfsize -= (char *)ret - (char *)mapped;
+	return ret;
+}
+
 void print_symtab(char *filename)
 {
 	t_mach_header		*mapped;
@@ -92,6 +123,11 @@ void print_symtab(char *filename)
 
 	if (!(mapped = (t_mach_header *)ft_mmap(filename)))
 		return ;
+//	if (!ft_strncmp(ARMAG, (char *)mapped, SARMAG))
+//		return;
+//	ft_printf("%x\n", *(uint32_t *)mapped);
+	if (*(uint32_t *)mapped == FAT_CIGAM)
+		mapped = handle_fat(mapped);
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
 		ft_putstr_fd("The file was not recognized as a valid object file\n", STDERR_FILENO);
 	else {
@@ -116,6 +152,8 @@ int main(int ac, char **av)
 	char **args;
 
 	(void)ac;
+	if (G_CPU < 0)
+		ft_printf("\\u001b[34mWarning\\u001b[34m: unknown type of host cpu type\n");
 	args = ft_nm_getopt((const char **)av);
 	if (!*args)
 		 print_symtab("a.out");

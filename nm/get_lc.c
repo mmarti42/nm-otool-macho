@@ -13,7 +13,7 @@ void *get_lc(uint32_t cmd, t_mach_header *mapped)
 	i = 0;
 	if (g_file_type == archx86)
 		ld = (t_load_command *)((char *)mapped + sizeof(struct mach_header));
-	else
+	else if (g_file_type == archx64)
 		ld = (t_load_command *)((char *)mapped + sizeof(struct mach_header_64));
 	while (++i <= mapped->ncmds)
 	{
