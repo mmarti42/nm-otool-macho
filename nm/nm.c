@@ -1,29 +1,30 @@
 #include "nm.h"
 
-void *ft_mmap(char *filename)
+char **ft_nm_getopt(const char **av)
 {
-	int fd;
-	char *mapped;
-	struct stat st;
+	char 	buf[6];
+	int		i;
+	char	**ret;
 
-	if ((fd = open(filename, O_RDONLY)) < 0)
+	i = -1;
+	if (!(ret = parse_opt(av, "pruAg", buf)))
+		fatal_err(USAGE);
+	while (buf[++i])
 	{
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
-		ft_putchar('\n');
-		close(fd);
-		return NULL;
+		if (buf[i] == 'p')
+			g_opt.p = true;
+		else if (buf[i] == 'u')
+			g_opt.u = true;
+		else if (buf[i] == 'g')
+			g_opt.g = true;
+		else if (buf[i] == 'r')
+			g_opt.r = true;
+		else if (buf[i] == 'A')
+			g_opt.aa = true;
 	}
-	if (fstat(fd, &st) < 0)
-		fatal_err(strerror(errno));
-	if ((g_cfsize = st.st_size) <= (off_t)0x1000)
-	{
-		ft_putstr_fd("not binary\n", STDERR_FILENO);
-		return NULL;
-	}
-	if ((mapped = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0)) == MAP_FAILED)
-		fatal_err(strerror(errno));
-	close(fd);
-	return (mapped);
+	if (ret[1])
+		g_opt.print_files = true;
+	return (ret);
 }
 
 t_symbol *get_sym_list(t_symtab_command *sc, char *mapped)
@@ -165,7 +166,7 @@ int main(int ac, char **av)
 
 	(void)ac;
 	if (G_CPU < 0)
-		ft_printf("\\u001b[34mWarning\\u001b[34m: unknown type of host cpu type\n");
+		ft_printf("\\u001b[34mWarning\\u001b[34m: unknown host cpu type\n");
 	args = ft_nm_getopt((const char **)av);
 	if (!*args)
 		 print_symtab("a.out");

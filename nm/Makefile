@@ -7,11 +7,15 @@ CC := clang
 CFLAGS := -g -Wall -Wextra -Werror
 
 
-UTILS = utils.c
+UTILS := utils.c
+
+UTILS_OBJ := utils.o
 
 UTILS_DIR := $(ROOT)/utils
 
-UTL := $(wildcard $(UTILS_DIR)/,$(UTILS))
+UTL_O := $(addprefix $(UTILS_DIR)/,$(UTILS_OBJ))
+
+UTL := $(addprefix $(UTILS_DIR)/,$(UTILS))
 
 
 INCLUDES_DIR := $(ROOT)/includes
@@ -32,7 +36,7 @@ LIB_INC := $(wildcard $(LIBFT_INCLUDES_DIR)/$(LIBFT_INCLUDES))
 
 #-------------------------
 
-
+.PHONY: all clean fclean re
 
 NAME := ft_nm
 
@@ -48,13 +52,12 @@ OBJS := $(addprefix $(OBJ_DIR)/,$(SOURCES:.c=.o))
 INCLUDES := ft_macho.h\
 	nm.h
 
-INC := $(LIB_INC) $(wildcard $(INCLUDES_DIR)/,$(INCLUDES))
+INC := $(LIB_INC) $(addprefix $(INCLUDES_DIR)/,$(INCLUDES))
 
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJS) $(INC) $(UTL)
-	$(info $$(UTL) is [${UTL}])
-	$(CC) $(CFLAGS) -o $(ROOT)/$(NAME) $(OBJS) $(LIBFT)
+$(NAME): $(OBJS) $(UTL_O) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(ROOT)/$(NAME) $(OBJS) $(UTL_O) $(LIBFT)
 
 $(filter $(OBJ_DIR)/%.o,$(OBJS)): $(OBJ_DIR)/%.o: %.c $(INC) | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c -I $(INCLUDES_DIR) -I $(LIBFT_INCLUDES_DIR) -o $@ $<
@@ -64,7 +67,11 @@ $(OBJ_DIR):
 
 #can be added to Makefile.global too
 
+$(filter $(UTILS_DIR)/%.o,$(UTILS_DIR)/$(UTILS_OBJ)): $(UTILS_DIR)/%.o: $(UTL) $(INC) | $(UTL_DIR)
+	$(CC) $(CFLAGS) -c -I $(INCLUDES_DIR) -I $(LIBFT_INCLUDES_DIR) -o $@ $<
 
+$(UTL_DIR):
+	mkdir -p $(UTL_DIR)
 
 #--------------------------------
 
@@ -73,11 +80,12 @@ $(LIBFT): $(LIBFT_INC)
 
 clean:
 	make clean -C $(LIBFT_DIR)
+	rm -f $(UTL_O)
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
-	rm -f $(NAME)
+	rm -f $(ROOT)/$(NAME)
 
 re: fclean all
 	make re -C $(LIBFT_DIR)
