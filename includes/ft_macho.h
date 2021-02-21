@@ -22,7 +22,7 @@
 
 typedef enum	e_file_type
 {
-	fat = FAT_MAGIC,
+	fat = FAT_CIGAM,
 	archx64 = MH_MAGIC_64,
 	archx86 = MH_MAGIC
 }				t_file_type;
