@@ -68,10 +68,11 @@ int	get_text(t_text *buf, t_mach_header *mapped)
 		return get_text32(buf, mapped);
 }
 
-void print_text(const unsigned char *text, size_t size)
+void print_text(const unsigned char *text, size_t size, char *fname)
 {
 	if (!size)
 		return;
+	ft_printf("%s:\n%s\n", fname, "(__TEXT,__text) section");
 	while (size > 16)
 	{
 		ft_printf("%016llx ", text);
@@ -113,7 +114,7 @@ void print_text_sect(char *fname)
 		g_file_type = mapped->magic;
 		if (get_text(&text, mapped) < 0)
 			ft_putstr_fd("Can't find text sect\n", STDERR_FILENO);
-		print_text((const unsigned char *)text.text, text.size);
+		print_text((const unsigned char *)text.text, text.size, fname);
 	}
 	if (munmap(mapped_tmp, g_cfsize) < 0)
 		return (fatal_err(strerror(errno)));
@@ -127,8 +128,8 @@ int main(int ac, char **av)
 	else {
 		if (G_CPU < 0)
 			ft_printf("\\u001b[34mWarning\\u001b[34m: unknown host cpu type\n");
-		while (*av)
-			print_text_sect(*av++);
+		while (*++av)
+			print_text_sect(*av);
 	}
 	return (0);
 }

@@ -6,6 +6,8 @@ NM_DIR := nm
 
 OTOOL_DIR := otool
 
+.PHONY: $(OTOOL) $(NM)
+
 all: $(NM) $(OTOOL)
 
 $(NM):
