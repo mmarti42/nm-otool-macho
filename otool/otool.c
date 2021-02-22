@@ -81,16 +81,17 @@ void print_text(const unsigned char *text, size_t size)
 		 text += 16;
 		 size -= 16;
 	}
-	if (!size)
-		return;
-	ft_printf("%016llx ", text);
-	while (size)
+	if (size)
 	{
-		ft_printf("%02x ", *text);
-		size--;
-		text++;
+		ft_printf("%016llx ", text);
+		while (size)
+		{
+			ft_printf("%02x ", *text);
+			size--;
+			text++;
+		}
+		ft_putchar('\n');
 	}
-	ft_putchar('\n');
 }
 
 void print_text_sect(char *fname)
