@@ -1,0 +1,42 @@
+# ------------  CC  ------------------------------------------------------- #
+CC := clang
+
+CFLAGS := -g -Wall -Wextra -Werror
+
+# ------------  UTILS  ------------------------------------------------------- #
+
+UTILS_DIR := $(ROOT)/utils
+
+UTILS_OBJ_DIR := $(UTILS_DIR)/objs
+
+UTILS_SRC := utils.c
+
+UTILS_OBJ := $(UTILS_SRC:.c=.o)
+
+UTL_O := $(addprefix $(UTILS_OBJ_DIR)/,$(UTILS_OBJ))
+
+UTL_S := $(addprefix $(UTILS_DIR)/,$(UTILS_SRC))
+
+# ------------  LIBFT  ------------------------------------------------------- #
+
+LIBFT_DIR := $(ROOT)/libft
+
+LIBFT := $(LIBFT_DIR)/libftprintf.a
+
+LIBFT_INCLUDES := libft.h\
+	ft_printf.h
+
+# ------------  INCLUDES  ------------------------------------------------------- #
+INCLUDES_DIR := $(ROOT)/includes
+
+LIBFT_INCLUDES_DIR := $(LIBFT_DIR)/includes
+
+LIB_INC := $(addprefix $(LIBFT_INCLUDES_DIR)/,$(LIBFT_INCLUDES))
+
+all: compile
+
+$(filter $(UTILS_OBJ_DIR)/%.o,$(UTL_O)): $(UTILS_OBJ_DIR)/%.o: $(UTL_S) $(INC) | $(UTILS_OBJ_DIR)
+	$(CC) $(CFLAGS) -c -I $(INCLUDES_DIR) -I $(LIBFT_INCLUDES_DIR) -o $@ $<
+
+$(UTILS_OBJ_DIR):
+	mkdir -p $(UTILS_OBJ_DIR)
