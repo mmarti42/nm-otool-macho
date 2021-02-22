@@ -33,6 +33,11 @@ t_file_type		g_file_type;
 typedef struct mach_header	t_mach_header;
 typedef struct load_command t_load_command;
 
-void	*ft_mmap(char *filename);
+void			*ft_mmap(char *filename);
+void			fatal_err(const char *mes);
+void			*xmalloc(size_t size);
+void 			*get_lc(uint32_t cmd, t_mach_header *mapped);
+t_load_command	*next_com(t_load_command *ld);
+t_mach_header 	*handle_fat(void *mapped);
 
 #endif

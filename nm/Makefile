@@ -6,7 +6,6 @@ NAME := $(ROOT)/ft_nm
 
 SOURCES := nm.c\
 	fill_sym_list.c\
-	get_lc.c\
 	insert_sym.c
 
 OBJ_DIR := objs

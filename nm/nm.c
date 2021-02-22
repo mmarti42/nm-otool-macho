@@ -85,40 +85,6 @@ void print_sym_list(t_symbol *symlist, char *fname)
 	}
 }
 
-uint32_t	b_swap32(uint32_t x)
-{
-#ifdef __LITTLE_ENDIAN__
-	return ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8)
-			| (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24));
-#endif
-	return (x);
-}
-
-t_mach_header *handle_fat(void *mapped)
-{
-	uint64_t num;
-	struct fat_arch *it;
-	t_mach_header *ret;
-
-	ret = NULL;
-	if ((num = b_swap32(((struct fat_header *)mapped)->nfat_arch)) * sizeof(struct fat_header) + 1 > (uint64_t)g_cfsize)
-		fatal_err("corrupted");
-	it = (struct fat_arch *)((char *)mapped + sizeof(struct fat_header));
-	if (G_CPU == -1)
-		return (t_mach_header *)((char *)mapped + it->offset);
-	while (num--)
-	{
-		if (b_swap32(it->cputype) == G_CPU)
-			ret =  (t_mach_header *)((char *)mapped + b_swap32(it->offset));
-		it++;
-	}
-	if (!ret)
-		return (t_mach_header *)((char *)mapped +
-		b_swap32((((struct fat_arch *)((char *)mapped + sizeof(struct fat_header)))->offset)));
-	g_cfsize -= (char *)ret - (char *)mapped;
-	return ret;
-}
-
 void free_sym_list(t_symbol *symlist)
 {
 	t_symbol *tmp;
@@ -136,9 +102,11 @@ void print_symtab(char *filename)
 	t_mach_header		*mapped;
 	t_symbol 			*sym_list;
 	t_symtab_command 	*sc;
+	t_mach_header		*mapped_tmp;
 
 	if (!(mapped = (t_mach_header *)ft_mmap(filename)))
 		return ;
+	mapped_tmp = mapped;
 	if (*(uint32_t *)mapped == FAT_CIGAM)
 		mapped = handle_fat(mapped);
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
@@ -156,7 +124,7 @@ void print_symtab(char *filename)
 			free_sym_list(sym_list);
 		}
 	}
-	if (munmap(mapped, g_cfsize) < 0)
+	if (munmap(mapped_tmp, g_cfsize) < 0)
 		return (fatal_err(strerror(errno)));
 }
 
