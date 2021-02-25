@@ -111,6 +111,6 @@ void					print_symtab(char *filename)
 		print_sym_list(sym_list, filename);
 		free_sym_list(sym_list);
 	}
-	if (munmap(mapped_tmp, g_cfsize) < 0)
+	if (munmap((void *)mapped_tmp, g_cfsize) < 0)
 		return (fatal_err(strerror(errno)));
 }

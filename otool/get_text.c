@@ -26,7 +26,7 @@ t_text *buf, void *mapped)
 			fatal_err("corrupted");
 		if (!ft_strcmp(sect->sectname, "__text"))
 		{
-			buf->text = (char *)mapped + sect->offset;
+			buf->text = (const char unsigned *)mapped + sect->offset;
 			buf->size = sect->size;
 			return (0);
 		}
@@ -67,7 +67,7 @@ t_text *buf, void *mapped)
 			fatal_err("corrupted");
 		if (!ft_strcmp(sect->sectname, "__text"))
 		{
-			buf->text = (char *)mapped + sect->offset;
+			buf->text = (const char unsigned *)mapped + sect->offset;
 			buf->size = sect->size;
 			return (0);
 		}

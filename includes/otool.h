@@ -17,12 +17,12 @@
 
 # define USAGE "ft_otool file1 [file2 ...]"
 
-typedef struct	s_text
+typedef struct			s_text
 {
-	const char	*text;
-	size_t		size;
-}				t_text;
+	const unsigned char	*text;
+	size_t				size;
+}						t_text;
 
-int				get_text(t_text *buf, t_mach_header *mapped);
+int						get_text(t_text *buf, t_mach_header *mapped);
 
 #endif

@@ -12,18 +12,42 @@
 
 #include "otool.h"
 
-void		print_text(const unsigned char *text, size_t size, char *fname, long mapped)
+void		print_other(size_t size, const unsigned char *text, long mapped, long offs)
 {
-	long offs;
+	if (size)
+	{
+		ft_printf("%016llx\t", text - mapped + offs);
+		while (size)
+		{
+			ft_printf("%02x ", *text);
+			size--;
+			text++;
+		}
+		ft_putchar('\n');
+	}
+}
 
+long		get_offset(uint32_t magic, t_mach_header *mapped)
+{
+	if (magic == FAT_CIGAM)
+		return (0x100000000);
+	else if (((t_mach_header *)mapped)->filetype == MH_EXECUTE)
+		return (0x10000000);
+	else
+		return (0);
+}
+
+void		print_text(t_text *t, char *fname, long mapped, uint32_t magic)
+{
+	long				offs;
+	const unsigned char	*text;
+	size_t				size;
+
+	size = t->size;
+	text = t->text;
+	offs = get_offset(magic, (t_mach_header *)mapped);
 	if (!size)
 		return ;
-	if (g_file_type == fat)
-		offs = 0x100000000;
-	else if (((t_mach_header *)mapped)->filetype == MH_EXECUTE)
-		offs = 0x10000000;
-	else
-		offs = 0;
 	ft_printf("%s:\n%s\n", fname, "Contents of (__TEXT,__text) section");
 	while (size > 16)
 	{
@@ -37,17 +61,7 @@ void		print_text(const unsigned char *text, size_t size, char *fname, long mappe
 		text += 16;
 		size -= 16;
 	}
-	if (size)
-	{
-		ft_printf("%016llx\t", text - mapped + offs);
-		while (size)
-		{
-			ft_printf("%02x ", *text);
-			size--;
-			text++;
-		}
-		ft_putchar('\n');
-	}
+	print_other(size, text, mapped, offs);
 }
 
 static void	print_text_sect(char *fname)
@@ -70,9 +84,9 @@ static void	print_text_sect(char *fname)
 		g_file_type = mapped->magic;
 		if (get_text(&text, mapped) < 0)
 			ft_putstr_fd("Can't find text sect\n", STDERR_FILENO);
-		print_text((const unsigned char *)text.text, text.size, fname, (long)mapped);
+		print_text(&text, fname, (long)mapped, mapped_tmp->magic);
 	}
-	if (munmap(mapped_tmp, g_cfsize) < 0)
+	if (munmap((void *)mapped_tmp, g_cfsize) < 0)
 		return (fatal_err(strerror(errno)));
 }
 
