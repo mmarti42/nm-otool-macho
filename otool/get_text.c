@@ -98,7 +98,7 @@ int			get_text(t_text *buf, t_mach_header *mapped)
 {
 	int ret;
 
-	if (g_file_type == archx64)
+	if (mapped->magic == archx64)
 		ret = get_text64(buf, mapped);
 	else
 		ret = get_text32(buf, mapped);

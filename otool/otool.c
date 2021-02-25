@@ -14,12 +14,20 @@
 
 void		print_text(const unsigned char *text, size_t size, char *fname, long mapped)
 {
+	long offs;
+
 	if (!size)
 		return ;
+	if (g_file_type == fat)
+		offs = 0x100000000;
+	else if (((t_mach_header *)mapped)->filetype == MH_EXECUTE)
+		offs = 0x10000000;
+	else
+		offs = 0;
 	ft_printf("%s:\n%s\n", fname, "Contents of (__TEXT,__text) section");
 	while (size > 16)
 	{
-		ft_printf("%016lx\t", (long)text - mapped + 0x100000000);
+		ft_printf("%016lx\t", (long)text - mapped + offs);
 		ft_printf("%02x %02x %02x %02x %02x %02x %02x %02x %02x ",
 		text[0], text[1], text[2], text[3],\
 		text[4], text[5], text[6], text[7], text[8]);
@@ -31,7 +39,7 @@ void		print_text(const unsigned char *text, size_t size, char *fname, long mappe
 	}
 	if (size)
 	{
-		ft_printf("%016llx\t", text - mapped + 0x100000000);
+		ft_printf("%016llx\t", text - mapped + offs);
 		while (size)
 		{
 			ft_printf("%02x ", *text);

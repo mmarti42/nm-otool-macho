@@ -27,7 +27,7 @@ void			*ft_mmap(char *filename)
 	}
 	if (fstat(fd, &st) < 0)
 		fatal_err(strerror(errno));
-	if ((g_cfsize = st.st_size) <= 0x1000)
+	if ((g_cfsize = st.st_size) < (long long)sizeof(t_mach_header))
 	{
 		ft_putstr_fd("not binary\n", STDERR_FILENO);
 		return (NULL);
