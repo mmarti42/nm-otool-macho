@@ -16,7 +16,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-
 typedef struct		s_list
 {
 	void			*content;
@@ -86,6 +85,7 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char const *s, int fd);
 void				ft_putendl_fd(char const *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
-char				**parse_opt(char const **av, char const *opt_list, char *buf);
+char				**parse_opt(char const **av,
+	char const *opt_list, char *buf);
 
 #endif

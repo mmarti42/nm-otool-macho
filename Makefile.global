@@ -9,7 +9,8 @@ UTILS_DIR := $(ROOT)/utils
 
 UTILS_OBJ_DIR := $(UTILS_DIR)/objs
 
-UTILS_SRC := utils.c
+UTILS_SRC := utils.c\
+	handle_fat.c\
 
 UTILS_OBJ := $(UTILS_SRC:.c=.o)
 
@@ -35,7 +36,7 @@ LIB_INC := $(addprefix $(LIBFT_INCLUDES_DIR)/,$(LIBFT_INCLUDES))
 
 all: compile
 
-$(filter $(UTILS_OBJ_DIR)/%.o,$(UTL_O)): $(UTILS_OBJ_DIR)/%.o: $(UTL_S) $(INC) | $(UTILS_OBJ_DIR)
+$(filter $(UTILS_OBJ_DIR)/%.o,$(UTL_O)): $(UTILS_OBJ_DIR)/%.o: $(UTILS_DIR)/%.c $(INC) | $(UTILS_OBJ_DIR)
 	$(CC) $(CFLAGS) -c -I $(INCLUDES_DIR) -I $(LIBFT_INCLUDES_DIR) -o $@ $<
 
 $(UTILS_OBJ_DIR):

@@ -4,7 +4,8 @@ include $(ROOT)/Makefile.global
 
 NAME := $(ROOT)/ft_otool
 
-SOURCES := otool.c
+SOURCES := otool.c\
+	get_text.c
 
 OBJ_DIR := objs
 

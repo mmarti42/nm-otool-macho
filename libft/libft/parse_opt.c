@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_opt.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmarti <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/25 19:28:41 by mmarti            #+#    #+#             */
+/*   Updated: 2021/02/25 19:28:43 by mmarti           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
 /*
@@ -5,7 +17,7 @@
 ** При ошибке возвращает NULL
 */
 
-static char get_opt(char const *av, char const *opt_list, char *buf)
+static char	get_opt(char const *av, char const *opt_list, char *buf)
 {
 	while (*++av)
 	{
@@ -34,11 +46,11 @@ char		**parse_opt(char const **av, char const *opt_list, char *buf)
 				ft_putstr_fd(": illegal option: ", STDERR_FILENO);
 				ft_putchar_fd(err, STDERR_FILENO);
 				ft_putchar_fd('\n', STDERR_FILENO);
-				return NULL;
+				return (NULL);
 			}
 		}
 		else
 			break ;
 	}
-	return (char **)av + i;
+	return ((char **)av + i);
 }
