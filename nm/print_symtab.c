@@ -29,7 +29,7 @@ static t_symbol			*get_sym_list(t_symtab_command *sc, char *mapped)
 
 static void				print_one_symbol(t_symbol *symlist, char *fname)
 {
-	if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type < 'A'))
+	if ((g_opt.u && symlist->type != 'U') || (g_opt.g && symlist->type > 'Z'))
 		return ;
 	if (g_opt.aa)
 		ft_printf("%s: ", fname);

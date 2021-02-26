@@ -18,7 +18,6 @@ static char	get_sym_type(uint8_t n_type, uint32_t n_desc)
 	uint8_t	type_bits;
 
 	type_bits = n_type & N_TYPE;
-	(void)a;
 	if (!type_bits && g_file_type == relocatable &&
 	n_type == 0x01 && (n_desc & N_ALT_ENTRY))
 		return ('C');
