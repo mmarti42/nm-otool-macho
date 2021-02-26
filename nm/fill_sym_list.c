@@ -12,20 +12,22 @@
 
 #include "nm.h"
 
-static char	get_sym_type(uint8_t n_type)
+static char	get_sym_type(uint8_t n_type, uint32_t n_desc)
 {
 	char	ret;
 	uint8_t	type_bits;
 
+	uint32_t a = n_desc & REFERENCE_TYPE;
 	type_bits = n_type & N_TYPE;
-	if (!type_bits && n_type == 0x01 && g_file_type == relocatable)
+	(void)a;
+	if (!type_bits && g_file_type == relocatable && n_type == 0x01 && (n_desc & N_ALT_ENTRY))
 		return 'C';
 	if (!type_bits)
 		return ('U');
-	else if (type_bits & N_ABS)
-		ret = 'A';
 	else if (type_bits & N_INDR)
 		ret = 'I';
+	else if (type_bits & N_ABS)
+		ret = 'A';
 	else
 		return ('?');
 	return (ret);
@@ -103,7 +105,7 @@ char *strtab, size_t i, char *mapped)
 				fatal_err("corrupted");
 			new->addr = syms->n_value;
 			if (syms->n_sect == NO_SECT)
-				new->type = get_sym_type(syms->n_type);
+				new->type = get_sym_type(syms->n_type, syms->n_desc);
 			else
 				new->type = get_sym_sect32(mapped, syms->n_sect);
 			if (!(syms->n_type & N_EXT))
@@ -131,7 +133,7 @@ char *strtab, size_t i, char *mapped)
 				fatal_err("corrupted");
 			new->addr = syms->n_value;
 			if (syms->n_sect == NO_SECT)
-				new->type = get_sym_type(syms->n_type);
+				new->type = get_sym_type(syms->n_type, syms->n_desc);
 			else
 				new->type = get_sym_sect64(mapped, syms->n_sect);
 			if (!(syms->n_type & N_EXT))

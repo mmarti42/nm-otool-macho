@@ -33,14 +33,14 @@ static void				print_one_symbol(t_symbol *symlist, char *fname)
 		return ;
 	if (g_opt.aa)
 		ft_printf("%s: ", fname);
-	if (symlist->addr && *(symlist->name))
+	if ((symlist->addr || symlist->type != 'U') && *(symlist->name) && symlist->type != 'I')
 	{
 		if (g_file_magic == archx64)
 			ft_printf("%016llx %c ", symlist->addr, symlist->type);
 		else
 			ft_printf("%08llx %c ", symlist->addr, symlist->type);
 	}
-	else if (*(symlist->name))
+	else
 	{
 		if (g_file_magic == archx64)
 			ft_printf("%16s %c ", " ", symlist->type);
@@ -48,7 +48,10 @@ static void				print_one_symbol(t_symbol *symlist, char *fname)
 			ft_printf("%8s %c ", " ", symlist->type);
 	}
 	if (*(symlist->name))
-		ft_putendl(symlist->name);
+		ft_putstr(symlist->name);
+	if (symlist->type == 'I')
+		ft_printf(" (indirect for %s)", symlist->name);
+	ft_putchar('\n');
 }
 
 static void				print_sym_list(t_symbol *symlist, char *fname)

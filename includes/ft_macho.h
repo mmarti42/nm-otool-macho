@@ -41,7 +41,7 @@ typedef enum	e_header_magic
 typedef enum	e_file_type
 {
 	none = 0,
-	fat,
+	fat = FAT_MAGIC,
 	relocatable = MH_OBJECT,
 	executable = MH_EXECUTE,
 	shared = MH_DYLIB
