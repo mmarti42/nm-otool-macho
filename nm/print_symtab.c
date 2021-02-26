@@ -22,7 +22,7 @@ static t_symbol			*get_sym_list(t_symtab_command *sc, char *mapped)
 	if ((long)(strtab - mapped) > g_cfsize || (long)syms +
 	(long)(sc->nsyms) - (long)mapped > g_cfsize)
 		fatal_err("corrupted");
-	if (g_file_type == archx86)
+	if (g_file_magic == archx86)
 		return (fill_sym_list32(syms, strtab, sc->nsyms, mapped));
 	return (fill_sym_list64(syms, strtab, sc->nsyms, mapped));
 }
@@ -35,14 +35,14 @@ static void				print_one_symbol(t_symbol *symlist, char *fname)
 		ft_printf("%s: ", fname);
 	if (symlist->addr && *(symlist->name))
 	{
-		if (g_file_type == archx64)
+		if (g_file_magic == archx64)
 			ft_printf("%016llx %c ", symlist->addr, symlist->type);
 		else
 			ft_printf("%08llx %c ", symlist->addr, symlist->type);
 	}
 	else if (*(symlist->name))
 	{
-		if (g_file_type == archx64)
+		if (g_file_magic == archx64)
 			ft_printf("%16s %c ", " ", symlist->type);
 		else
 			ft_printf("%8s %c ", " ", symlist->type);
@@ -100,7 +100,7 @@ void					print_symtab(char *filename)
 	if (!(mapped = get_mapped(filename)))
 		return ;
 	mapped_tmp = mapped;
-	g_file_type = mapped->magic;
+	g_file_magic = mapped->magic;
 	if (!(sc = get_lc(LC_SYMTAB, mapped)))
 		ft_putstr_fd("Symbols not found\n", STDERR_FILENO);
 	else

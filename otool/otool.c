@@ -81,7 +81,7 @@ static void	print_text_sect(char *fname)
 		"as a valid object file\n", STDERR_FILENO);
 	else
 	{
-		g_file_type = mapped->magic;
+		g_file_magic = mapped->magic;
 		if (get_text(&text, mapped) < 0)
 			ft_putstr_fd("Can't find text sect\n", STDERR_FILENO);
 		print_text(&text, fname, (long)mapped, mapped_tmp->magic);

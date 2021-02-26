@@ -31,14 +31,23 @@
 #  define G_CPU -1
 # endif
 
-typedef enum	e_file_type
+typedef enum	e_file_magic
 {
 	fat = FAT_CIGAM,
 	archx64 = MH_MAGIC_64,
 	archx86 = MH_MAGIC
+}				t_file_magic;
+
+typedef enum	e_file_type
+{
+	fat,
+	shared_object,
+	executable,
+	dynamic
 }				t_file_type;
 
 off_t			g_cfsize;
+t_file_magic	g_file_magic;
 t_file_type		g_file_type;
 
 typedef struct mach_header	t_mach_header;
