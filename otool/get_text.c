@@ -39,14 +39,16 @@ static int	get_text64(t_text *buf, t_mach_header *mapped)
 {
 	struct segment_command_64	*seg;
 
-	seg = (struct segment_command_64 *)get_lc(LC_SEGMENT_64, mapped);
+	if (!(seg = (struct segment_command_64 *)get_lc(LC_SEGMENT_64, mapped)))
+		return (-1);
+	if (g_file_type == relocatable)
+		return (get_text_sect64(seg, buf, mapped));
 	while (1)
 	{
-		if (!seg)
-			return (-1);
 		if (!ft_strcmp(seg->segname, "__TEXT"))
 			break ;
-		seg = (struct segment_command_64 *)next_com((t_load_command *)seg);
+		if (!(seg = (struct segment_command_64 *)next_com((t_load_command *)seg)))
+			return (-1);
 		if ((long)seg - (long)mapped > g_cfsize)
 			fatal_err("corrupted");
 	}
@@ -80,14 +82,16 @@ static int	get_text32(t_text *buf, t_mach_header *mapped)
 {
 	struct segment_command *seg;
 
-	seg = (struct segment_command *)get_lc(LC_SEGMENT, mapped);
+	if (!(seg = (struct segment_command *)get_lc(LC_SEGMENT, mapped)))
+		return (-1);
+	if (g_file_type == relocatable)
+		return (get_text_sect32(seg, buf, mapped));
 	while (1)
 	{
-		if (!seg)
-			return (-1);
 		if (!ft_strcmp(seg->segname, "__TEXT"))
 			break ;
-		seg = (struct segment_command *)next_com((t_load_command *)seg);
+		if (!(seg = (struct segment_command *)next_com((t_load_command *)seg)))
+			return (-1);
 		if ((long)seg - (long)mapped > g_cfsize)
 			fatal_err("corrupted");
 	}

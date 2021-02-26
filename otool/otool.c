@@ -16,7 +16,7 @@ void		print_other(size_t size, const unsigned char *text, long mapped, long offs
 {
 	if (size)
 	{
-		ft_printf("%016llx\t", text - mapped + offs);
+		ft_printf("%016llx ", text - mapped + offs);
 		while (size)
 		{
 			ft_printf("%02x ", *text);
@@ -27,17 +27,19 @@ void		print_other(size_t size, const unsigned char *text, long mapped, long offs
 	}
 }
 
-long		get_offset(uint32_t magic, t_mach_header *mapped)
+long		get_offset(long offs, t_mach_header *mapped)
 {
-	if (magic == FAT_CIGAM)
+	if (mapped->filetype == shared)
+		return (0);
+	if (g_file_type == fat || g_file_type == executable)
 		return (0x100000000);
-	else if (((t_mach_header *)mapped)->filetype == MH_EXECUTE)
-		return (0x10000000);
+	else if (g_file_type == relocatable)
+		return (-offs);
 	else
 		return (0);
 }
 
-void		print_text(t_text *t, char *fname, long mapped, uint32_t magic)
+void		print_text(t_text *t, char *fname, long mapped)
 {
 	long				offs;
 	const unsigned char	*text;
@@ -45,13 +47,13 @@ void		print_text(t_text *t, char *fname, long mapped, uint32_t magic)
 
 	size = t->size;
 	text = t->text;
-	offs = get_offset(magic, (t_mach_header *)mapped);
+	offs = get_offset((long)text - (long)mapped, (t_mach_header *)mapped);
 	if (!size)
 		return ;
 	ft_printf("%s:\n%s\n", fname, "Contents of (__TEXT,__text) section");
 	while (size > 16)
 	{
-		ft_printf("%016lx\t", (long)text - mapped + offs);
+		ft_printf("%016lx ", (long)text - mapped + offs);
 		ft_printf("%02x %02x %02x %02x %02x %02x %02x %02x %02x ",
 		text[0], text[1], text[2], text[3],\
 		text[4], text[5], text[6], text[7], text[8]);
@@ -75,7 +77,12 @@ static void	print_text_sect(char *fname)
 		return ;
 	mapped_tmp = mapped;
 	if (*(uint32_t *)mapped == FAT_CIGAM)
+	{
 		mapped = handle_fat(mapped);
+		g_file_type = fat;
+	}
+	else
+		g_file_type = mapped->filetype;
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
 		ft_putstr_fd("The file was not recognized"
 		"as a valid object file\n", STDERR_FILENO);
@@ -84,7 +91,7 @@ static void	print_text_sect(char *fname)
 		g_file_magic = mapped->magic;
 		if (get_text(&text, mapped) < 0)
 			ft_putstr_fd("Can't find text sect\n", STDERR_FILENO);
-		print_text(&text, fname, (long)mapped, mapped_tmp->magic);
+		print_text(&text, fname, (long)mapped);
 	}
 	if (munmap((void *)mapped_tmp, g_cfsize) < 0)
 		return (fatal_err(strerror(errno)));
