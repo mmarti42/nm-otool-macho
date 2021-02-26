@@ -80,7 +80,12 @@ static t_mach_header	*get_mapped(char *filename)
 	if (!(mapped = (t_mach_header *)ft_mmap(filename)))
 		return (NULL);
 	if (*(uint32_t *)mapped == FAT_CIGAM)
+	{
 		mapped = handle_fat(mapped);
+		g_file_type = fat;
+	}
+	else
+		g_file_type = mapped->filetype;
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)
 	{
 		ft_putstr_fd("The file was not recognized"\

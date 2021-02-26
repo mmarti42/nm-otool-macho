@@ -40,11 +40,11 @@ typedef enum	e_header_magic
 
 typedef enum	e_file_type
 {
-	none,
+	none = 0,
 	fat,
-	relocatable,
-	executable,
-	shared
+	relocatable = MH_OBJECT,
+	executable = MH_EXECUTE,
+	shared = MH_DYLIB
 }				t_file_type;
 
 off_t			g_cfsize;
