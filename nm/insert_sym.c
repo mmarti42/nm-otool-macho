@@ -30,10 +30,20 @@ static t_symbol	*push_begin(t_symbol *new, t_symbol *first)
 	return (new);
 }
 
+t_symbol		*ins(t_symbol *new, t_symbol *it, t_symbol *first)
+{
+	new->prev = it->prev;
+	if (it->prev)
+		it->prev->next = new;
+	it->prev = new;
+	new->next = it;
+	return (first);
+}
+
 t_symbol		*insert_sym(t_symbol *new, t_symbol *first)
 {
-	t_symbol *it;
-	int cmp;
+	t_symbol	*it;
+	int			cmp;
 
 	if (!first)
 		return (new);
@@ -41,8 +51,6 @@ t_symbol		*insert_sym(t_symbol *new, t_symbol *first)
 		return (not_sort(new, first));
 	if (ft_strcmp(new->name, first->name) < 0)
 		return (push_begin(new, first));
-	// if (!strcmp(new->name, "___gxx_personality_v0"))
-	// 	write(1, "___gxx_personality_v0", 1);
 	it = first;
 	while ((cmp = ft_strcmp(new->name, it->name)) >= 0)
 	{
@@ -56,10 +64,5 @@ t_symbol		*insert_sym(t_symbol *new, t_symbol *first)
 		}
 		it = it->next;
 	}
-	new->prev = it->prev;
-	if (it->prev)
-		it->prev->next = new;
-	it->prev = new;
-	new->next = it;
-	return (first);
+	return (ins(new, it, first));
 }

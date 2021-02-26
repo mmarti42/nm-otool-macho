@@ -17,11 +17,11 @@ static char	get_sym_type(uint8_t n_type, uint32_t n_desc)
 	char	ret;
 	uint8_t	type_bits;
 
-	uint32_t a = n_desc & REFERENCE_TYPE;
 	type_bits = n_type & N_TYPE;
 	(void)a;
-	if (!type_bits && g_file_type == relocatable && n_type == 0x01 && (n_desc & N_ALT_ENTRY))
-		return 'C';
+	if (!type_bits && g_file_type == relocatable &&
+	n_type == 0x01 && (n_desc & N_ALT_ENTRY))
+		return ('C');
 	if (!type_bits)
 		return ('U');
 	else if (type_bits & N_INDR)

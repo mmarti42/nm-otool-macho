@@ -56,6 +56,7 @@ t_mach_header			*handle_fat(void *mapped)
 	struct fat_arch	*it;
 	t_mach_header	*ret;
 
+	g_file_type = fat;
 	if ((num = (long)b_swap32(((struct fat_header *)mapped)->nfat_arch))
 	* 0x1000 > g_cfsize)
 		fatal_err("corrupted");

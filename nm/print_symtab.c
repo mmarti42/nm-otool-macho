@@ -33,7 +33,8 @@ static void				print_one_symbol(t_symbol *symlist, char *fname)
 		return ;
 	if (g_opt.aa)
 		ft_printf("%s: ", fname);
-	if ((symlist->addr || symlist->type != 'U') && *(symlist->name) && symlist->type != 'I')
+	if ((symlist->addr || symlist->type != 'U') &&
+	*(symlist->name) && symlist->type != 'I')
 	{
 		if (g_file_magic == archx64)
 			ft_printf("%016llx %c ", symlist->addr, symlist->type);

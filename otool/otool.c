@@ -12,13 +12,14 @@
 
 #include "otool.h"
 
-void		print_other(size_t size, const unsigned char *text, long mapped, long offs)
+void		print_other(size_t size, const unsigned char *text,
+long mapped, long offs)
 {
 	if (size)
 	{
 		if (g_file_magic == archx86)
 			ft_printf("%08llx ", text - mapped + offs);
-		else 
+		else
 			ft_printf("%016llx ", text - mapped + offs);
 		while (size)
 		{
@@ -67,9 +68,8 @@ void		print_text(t_text *t, char *fname, long mapped)
 		ft_printf("%02x %02x %02x %02x %02x %02x %02x %02x %02x ",
 		text[0], text[1], text[2], text[3],\
 		text[4], text[5], text[6], text[7], text[8]);
-		ft_printf("%02x %02x %02x %02x %02x %02x %02x \n", 
-		text[9], text[10],\
-		text[11], text[12], text[13], text[14], text[15]);
+		ft_printf("%02x %02x %02x %02x %02x %02x %02x \n",
+		text[9], text[10], text[11], text[12], text[13], text[14], text[15]);
 		text += 16;
 		size -= 16;
 	}
@@ -87,10 +87,7 @@ static void	print_text_sect(char *fname)
 		return ;
 	mapped_tmp = mapped;
 	if (*(uint32_t *)mapped == FAT_CIGAM)
-	{
 		mapped = handle_fat(mapped);
-		g_file_type = fat;
-	}
 	else
 		g_file_type = mapped->filetype;
 	if (mapped->magic != MH_MAGIC && mapped->magic != MH_MAGIC_64)

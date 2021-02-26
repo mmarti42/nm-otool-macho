@@ -15,11 +15,12 @@
 static int	get_text_sect64(struct segment_command_64 *seg,
 t_text *buf, void *mapped)
 {
-	uint32_t		i;
+	uint32_t			i;
 	struct section_64	*sect;
 
 	i = 0;
-	sect = (struct section_64 *)((char *)seg + sizeof(struct segment_command_64));
+	sect = (struct section_64 *)((char *)seg +
+	sizeof(struct segment_command_64));
 	while (i++ < seg->nsects)
 	{
 		if ((long)sect - (long)mapped > g_cfsize)
@@ -47,7 +48,8 @@ static int	get_text64(t_text *buf, t_mach_header *mapped)
 	{
 		if (!ft_strcmp(seg->segname, "__TEXT"))
 			break ;
-		if (!(seg = (struct segment_command_64 *)next_com((t_load_command *)seg)))
+		if (!(seg = (struct segment_command_64 *)next_com(
+			(t_load_command *)seg)))
 			return (-1);
 		if ((long)seg - (long)mapped > g_cfsize)
 			fatal_err("corrupted");
