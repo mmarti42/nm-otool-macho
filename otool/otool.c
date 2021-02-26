@@ -16,7 +16,10 @@ void		print_other(size_t size, const unsigned char *text, long mapped, long offs
 {
 	if (size)
 	{
-		ft_printf("%016llx ", text - mapped + offs);
+		if (g_file_magic == archx86)
+			ft_printf("%08llx ", text - mapped + offs);
+		else 
+			ft_printf("%016llx ", text - mapped + offs);
 		while (size)
 		{
 			ft_printf("%02x ", *text);
@@ -32,7 +35,11 @@ long		get_offset(long offs, t_mach_header *mapped)
 	if (mapped->filetype == shared)
 		return (0);
 	if (g_file_type == fat || g_file_type == executable)
+	{
+		if (g_file_magic == archx86)
+			return (0x1000);
 		return (0x100000000);
+	}
 	else if (g_file_type == relocatable)
 		return (-offs);
 	else
@@ -53,7 +60,10 @@ void		print_text(t_text *t, char *fname, long mapped)
 	ft_printf("%s:\n%s\n", fname, "Contents of (__TEXT,__text) section");
 	while (size > 16)
 	{
-		ft_printf("%016lx ", (long)text - mapped + offs);
+		if (g_file_magic == archx86)
+			ft_printf("%08lx ", (long)text - mapped + offs);
+		else
+			ft_printf("%016lx ", (long)text - mapped + offs);
 		ft_printf("%02x %02x %02x %02x %02x %02x %02x %02x %02x ",
 		text[0], text[1], text[2], text[3],\
 		text[4], text[5], text[6], text[7], text[8]);
