@@ -6,7 +6,7 @@
 /*   By: mmarti <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 20:55:54 by mmarti            #+#    #+#             */
-/*   Updated: 2021/02/25 20:55:55 by mmarti           ###   ########.fr       */
+/*   Updated: 2021/02/28 16:06:31 by student          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void			*ft_mmap(char *filename)
 
 	if ((fd = open(filename, O_RDONLY)) < 0)
 	{
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
+		char *err;
+		ft_putendl_fd(err = strerror(errno), STDERR_FILENO);
+		free(err);
 		ft_putchar('\n');
 		close(fd);
 		return (NULL);
