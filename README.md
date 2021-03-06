@@ -24,5 +24,5 @@ Usage
 
 supports:
 > archives,  
-> fat, 32, 64 binaries,   
+> 32, 64, fat binaries,   
 > dylib
