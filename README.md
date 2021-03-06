@@ -23,6 +23,6 @@ Usage
 `./ft_otool [file ...]`
 
 supports:
-archives, 
-fat, 32, 64 binariees, 
-dylib
+> archives, 
+> fat, 32, 64 binariees, 
+> dylib
